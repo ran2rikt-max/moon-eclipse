@@ -1,0 +1,2883 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoonEclipse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap&subset=cyrillic" rel="stylesheet">
+    
+    <style>
+        /* ========== ОБЩИЕ СТИЛИ ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* ========== ШАПКА (HEADER) ========== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: all 0.5s ease;
+            width: 100%;
+            position: relative;
+        }
+        
+        .header-button {
+            width: 240px;
+            height: 40px;
+            background-color: #282828;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #818181;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+        
+        .header-button:hover {
+            background-color: #383838;
+            color: #a0a0a0;
+            transform: translateY(-2px);
+        }
+        
+        .header-social-icon {
+            width: 36px;
+            height: 36px;
+            opacity: 0.85;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            filter: brightness(0.9);
+            transform: scale(1);
+        }
+        
+        .header-social-icon:hover {
+            opacity: 1;
+            filter: brightness(1.2);
+            transform: scale(1.1);
+        }
+        
+        .header-logo {
+            width: 0;
+            height: 46px;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(255, 58, 0, 0.7));
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.5);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+        
+        .social-icons-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 0 0 auto;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .header.scrolled .header-content {
+            gap: 15px;
+        }
+        
+        .header.scrolled .header-logo {
+            width: auto;
+            max-width: 120px;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .header.scrolled .header-button {
+            transform: translateX(-80px);
+        }
+        
+        .header.scrolled .social-icons-container {
+            transform: translateX(10px);
+        }
+        
+        /* ========== ЗВЕЗДНОЕ ПОЛЕ ========== */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            mix-blend-mode: screen;
+            animation: nebulaFloat 40s infinite ease-in-out alternate;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .nebula-1 {
+            background: radial-gradient(circle, rgba(255, 58, 0, 0.4) 0%, rgba(255, 58, 0, 0.1) 70%);
+            width: 500px;
+            height: 500px;
+            top: 10%;
+            left: 5%;
+        }
+        
+        .nebula-2 {
+            background: radial-gradient(circle, rgba(255, 100, 40, 0.3) 0%, rgba(255, 100, 40, 0.05) 70%);
+            width: 700px;
+            height: 700px;
+            bottom: 15%;
+            right: 10%;
+            animation-duration: 50s;
+            animation-delay: 10s;
+        }
+        
+        .nebula-3 {
+            background: radial-gradient(circle, rgba(255, 30, 0, 0.25) 0%, rgba(255, 30, 0, 0.05) 70%);
+            width: 400px;
+            height: 400px;
+            top: 60%;
+            left: 70%;
+            animation-duration: 60s;
+            animation-delay: 5s;
+        }
+        
+        .nebula-4 {
+            background: radial-gradient(circle, rgba(255, 80, 20, 0.2) 0%, rgba(255, 80, 20, 0.03) 70%);
+            width: 600px;
+            height: 300px;
+            top: 20%;
+            left: 40%;
+            border-radius: 40%;
+            animation-duration: 45s;
+            animation-delay: 15s;
+        }
+        
+        @keyframes nebulaFloat {
+            0% { 
+                transform: translate(0, 0) scale(1) rotate(0deg); 
+            }
+            33% { 
+                transform: translate(100px, 50px) scale(1.1) rotate(10deg); 
+            }
+            66% { 
+                transform: translate(-50px, 100px) scale(0.9) rotate(-5deg); 
+            }
+            100% { 
+                transform: translate(50px, -50px) scale(1.05) rotate(5deg); 
+            }
+        }
+        
+        /* ========== ОСНОВНОЙ КОНТЕНТ ========== */
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            z-index: 20;
+            transition: all 0.5s ease;
+            padding-top: 60px;
+            margin-top: 185px;
+        }
+        
+        .logo-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(-130px);
+        }
+        
+        .main-logo {
+            max-width: 533px;
+            width: 100%;
+            height: auto;
+            opacity: 1;
+            filter: drop-shadow(0 0 20px rgba(255, 58, 0, 0.7));
+            z-index: 25;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .header.scrolled ~ .main-content .logo-container {
+            opacity: 0;
+            transform: translateY(-230px) scale(0.3);
+            pointer-events: none;
+        }
+        
+        .header.scrolled ~ .main-content .main-logo {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        
+        h1 {
+            font-size: 75px;
+            font-weight: 700;
+            line-height: 1.1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 20;
+            color: #ffffff;
+            pointer-events: none;
+            transform-origin: center;
+            will-change: transform, color;
+            transform: translateY(-20px) scale(0.95);
+            margin-top: -70px;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                       color 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        h1.animate-in {
+            color: #ffffff;
+            transform: translateY(-50px) scale(1);
+        }
+        
+        h1.animate-out {
+            color: #000000;
+            transform: translateY(-100px) scale(0.85);
+        }
+        
+        /* ========== ВИДЕО-ПЛЕЕР ========== */
+        .video-container {
+            width: 100%;
+            position: relative;
+            margin-top: 130px;
+            margin-bottom: 30px;
+            z-index: 20;
+        }
+        
+        .video-wrapper {
+            width: calc(100% - 260px);
+            position: relative;
+            overflow: hidden;
+            margin: 0 130px 0px 130px;
+            border: 12px solid #1D1D1D;
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+        
+        .video-wrapper:fullscreen {
+            border: none !important;
+            border-radius: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+        }
+        
+        #background-video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+            cursor: pointer;
+        }
+        
+        .video-controls {
+            position: absolute;
+            bottom: 45px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            z-index: 30;
+        }
+        
+        .video-control-btn {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+        
+        .video-control-btn svg,
+        .video-control-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        
+        .video-control-icon {
+            filter: invert(25%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(90%) contrast(90%);
+        }
+        
+        .video-control-btn:hover .video-control-icon {
+            filter: invert(42%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(90%) contrast(90%);
+        }
+        
+        /* ========== БЛОК АФИША ========== */
+        .additional-sections {
+            width: 100%;
+            position: relative;
+            z-index: 20;
+            margin-top: 80px;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .section-block {
+            margin-bottom: 300px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .section-block:last-child {
+            margin-bottom: 30px;
+        }
+        
+        .afisha-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: -100px;
+            margin-bottom: 40px;
+            width: auto;
+        }
+        
+        .animated-rect {
+            position: absolute;
+            width: 308px;
+            height: 110px;
+            border-radius: 100px;
+            background-color: transparent;
+            border: 2px solid transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .animated-rect.outline-animating {
+            opacity: 1;
+            background-color: #000000;
+            border-color: #ffffff;
+            animation: drawOutline 2s ease-out forwards;
+        }
+        
+        .animated-rect.fill-animating {
+            opacity: 1;
+            background-color: #ffffff;
+            border-color: #ffffff;
+            animation: fillBackground 0.5s ease-out forwards;
+        }
+        
+        .animated-rect.fade-out {
+            opacity: 1;
+            background-color: #ffffff;
+            border-color: #ffffff;
+            animation: fadeOutBackground 1.5s ease-out forwards;
+        }
+        
+        .afisha-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 58px;
+            font-weight: 700;
+            color: transparent;
+            text-align: center;
+            position: relative;
+            pointer-events: none;
+            padding: 0;
+            transition: color 0.5s ease;
+            z-index: 1;
+            width: 308px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .afisha-text.text-visible {
+            color: #000000;
+        }
+        
+        .afisha-text.text-final {
+            color: #ffffff;
+        }
+        
+        @keyframes drawOutline {
+            0% {
+                clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+            }
+            25% {
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 100%);
+            }
+            50% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            75% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            100% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+        }
+        
+        @keyframes fillBackground {
+            0% {
+                background-color: #000000;
+            }
+            100% {
+                background-color: #ffffff;
+            }
+        }
+        
+        @keyframes fadeOutBackground {
+            0% {
+                background-color: #ffffff;
+                border-color: #ffffff;
+            }
+            100% {
+                background-color: transparent;
+                border-color: transparent;
+            }
+        }
+        
+        /* ========== СЕТКА АФИШ ========== */
+        .posters-grid {
+            display: grid;
+            justify-content: center;
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            margin-bottom: 100px;
+            margin-top: 0px;
+            gap: 40px;
+            padding: 0 40px;
+            grid-template-columns: minmax(300px, 600px);
+        }
+        
+        .posters-grid[data-count="2"] {
+            grid-template-columns: repeat(2, minmax(300px, 450px));
+        }
+        
+        .posters-grid[data-count="3"],
+        .posters-grid[data-count="4"],
+        .posters-grid[data-count="5"],
+        .posters-grid[data-count="6"] {
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            max-width: 1600px;
+        }
+        
+        .poster-card {
+            position: relative;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                       transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .poster-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .poster-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 58, 0, 0.2);
+        }
+        
+        .poster-card-image-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 66.67%;
+            position: relative;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+        
+        .poster-card-image-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 12;
+            border-radius: 13px 13px 0 0;
+        }
+        
+        .poster-card-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .poster-card:hover .poster-card-image {
+            transform: scale(1.05);
+        }
+        
+        .poster-card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .poster-card-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            text-align: left;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .poster-card-info {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .poster-card-date,
+        .poster-card-venue {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .poster-card-ticket {
+            width: 275px;
+            height: 38px;
+            background-color: #FF3A00;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            margin-top: 15px;
+            padding: 0 18px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poster-card-ticket .ticket-text {
+            flex-grow: 1;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .poster-card-ticket .ticket-arrow {
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            filter: brightness(0) invert(1);
+        }
+        
+        .poster-card-ticket:hover {
+            background-color: transparent;
+            border: 1px solid #C3C3C3;
+            color: #7A7A7A;
+        }
+        
+        .poster-card-ticket:hover .ticket-text {
+            color: #7A7A7A;
+        }
+        
+        .poster-card-ticket:hover .ticket-arrow {
+            filter: brightness(0) invert(0.48);
+            transform: translateY(-50%) translateX(5px);
+        }
+        
+        /* ========== КАРТОЧКА-ЗАГЛУШКА С ИНСТРУМЕНТАМИ ========== */
+        .poster-card.placeholder-card {
+            background: #F5F5F5;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .poster-card.placeholder-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .placeholder-top-area {
+            width: 100%;
+            height: 375px;
+            background: #F5F5F5;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .placeholder-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #B4B4B4;
+            margin: 0;
+            z-index: 1;
+        }
+        
+        .instrument-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            opacity: 1;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                       transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+            cursor: pointer;
+        }
+        
+        .instrument-icon.fade-out {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+        }
+        
+        .instrument-icon.fade-in {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .instrument-icon.large-icon {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .instrument-icon.extra-large-icon {
+            width: 240px;
+            height: 240px;
+        }
+        
+        .placeholder-bottom-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            height: calc(100% - 375px);
+            box-sizing: border-box;
+        }
+        
+        .placeholder-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #686868;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .placeholder-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: #686868;
+            text-align: center;
+            width: 100%;
+            padding: 0 60px;
+            box-sizing: border-box;
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 0;
+            border-top: none;
+        }
+        
+        .poster-card.placeholder-card .poster-card-image-container,
+        .poster-card.placeholder-card .poster-card-image-mask {
+            display: none;
+        }
+        
+        /* ========== НОВЫЙ БЛОК "НАШ РЕПЕРТУАР" С СЕТКОЙ 2x2 ========== */
+        /* ========== НОВЫЙ БЛОК "НАШ РЕПЕРТУАР" С СЕТКОЙ 2x2 ========== */
+.repertoire-section {
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    margin-top: 10px;
+    padding: 60px 0;
+    background: #000;
+}
+
+.repertoire-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 58px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 80px;
+    width: 100%;
+}
+/* ========== БЛОК "НАША КОМАНДА" ========== */
+.team-section {
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    margin-top: 50px;
+    padding: 60px 0;
+    background: #000;
+}
+
+.team-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 58px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 00px;
+    width: 100%;
+}
+/* ========== БЛОК "НАША КОМАНДА" С ИЗОБРАЖЕНИЕМ ========== */
+.team-section {
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    margin-top: 50px;
+    padding: 60px 0;
+    background: #000;
+}
+
+.team-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 58px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 80px;
+    width: 100%;
+}
+/* ========== БЛОК "СОЦСЕТИ" ========== */
+/* ========== БЛОК "СОЦСЕТИ" ========== */
+.social-section {
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    margin-top: 10px; /* Отступ от фотографии команды */
+    padding: 60px 0;
+    background: #000;
+}
+
+.social-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 58px; /* Такой же размер как у .team-title */
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 10px; /* Такой же отступ как у .team-title */
+    margin-top: -100px; 
+    width: 100%;
+}
+<div class="social-icons-group">
+    <img src="tg-logo-big.svg" alt="Telegram" class="social-big-icon tg-icon">
+    <img src="vk-logo-big.svg" alt="VK" class="social-big-icon vk-icon">
+</div>
+@media (max-width: 1650px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+/* ========== БОЛЬШИЕ ЛОГОТИПЫ СОЦСЕТЕЙ ========== */
+.social-icons-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 60px;
+    height: 200px; /* Высота для контейнера */
+}
+
+.social-big-icon {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+    animation-fill-mode: forwards;
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 0 10px rgba(255, 58, 0, 0.5));
+    transition: filter 0.3s ease;
+}
+
+.social-big-icon:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 58, 0, 0.8));
+}
+
+/* Telegram логотип */
+.tg-icon {
+    animation-name: tg-appear;
+    animation-delay: 0.3s; /* Задержка для появления после текста */
+    z-index: 2;
+    transform-origin: center;
+}
+
+/* VK логотип */
+.vk-icon {
+    animation-name: vk-appear;
+    animation-delay: 0.3s;
+    z-index: 1;
+    transform-origin: center;
+}
+
+/* Позиционирование с перекрытием 50px */
+.tg-icon {
+    left: calc(50% - 90px - 25px); /* 90px - половина ширины, 25px - половина перекрытия */
+}
+
+.vk-icon {
+    left: calc(50% - 90px + 25px); /* Сдвиг на 25px вправо для перекрытия */
+}
+
+/* Анимация для Telegram */
+@keyframes tg-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(-15deg);
+    }
+}
+
+/* Анимация для VK */
+@keyframes vk-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(15deg);
+    }
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    .social-icons-group {
+        height: 180px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+    
+    .social-big-icon {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .tg-icon {
+        left: calc(50% - 80px - 25px);
+    }
+    
+    .vk-icon {
+        left: calc(50% - 80px + 25px);
+    }
+}
+
+@media (max-width: 992px) {
+    .social-icons-group {
+        height: 150px;
+        margin-top: 25px;
+        margin-bottom: 40px;
+    }
+    
+    .social-big-icon {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .tg-icon {
+        left: calc(50% - 65px - 20px);
+    }
+    
+    .vk-icon {
+        left: calc(50% - 65px + 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .social-icons-group {
+        height: 130px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .social-big-icon {
+        width: 110px;
+        height: 110px;
+    }
+    
+    .tg-icon {
+        left: calc(50% - 55px - 15px);
+    }
+    
+    .vk-icon {
+        left: calc(50% - 55px + 15px);
+    }
+}
+
+@media (max-width: 576px) {
+    .social-icons-group {
+        height: 110px;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .social-big-icon {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .tg-icon {
+        left: calc(50% - 45px - 12px);
+    }
+    
+    .vk-icon {
+        left: calc(50% - 45px + 12px);
+    }
+}
+
+@media (max-width: 400px) {
+    .social-icons-group {
+        height: 90px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .social-big-icon {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .tg-icon {
+        left: calc(50% - 37.5px - 10px);
+    }
+    
+    .vk-icon {
+        left: calc(50% - 37.5px + 10px);
+    }
+}
+@media (max-width: 1600px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 44px; margin-bottom: 60px; }
+}
+
+@media (max-width: 1400px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+
+@media (max-width: 1200px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+
+@media (max-width: 992px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+
+@media (max-width: 768px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+
+@media (max-width: 576px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 48px; margin-bottom: 60px; }
+}
+
+@media (max-width: 400px) {
+    /* ... существующие стили ... */
+    .team-title,
+    .social-text { font-size: 18px; margin-bottom: 60px; }
+}
+.team-image-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 0px; /* Отступ от текста */
+}
+@media (max-width: 1650px) {
+    /* ... существующие стили ... */
+    .team-image-container { margin-top: 0px; }
+    .team-image { max-width: 100%; }
+}
+
+@media (max-width: 1600px) {
+    /* ... существующие стили ... */
+    .team-image-container { margin-top: 0px; }
+    .team-image { max-width: 100%%; }
+}
+
+@media (max-width: 1400px) {
+    /* ... существующие стили ... */
+    .team-image-container { margin-top: 110px; }
+    .team-image { max-width: 85%; }
+}
+
+@media (max-width: 1200px) {
+    /* ... существующие стили ... */
+    .team-image-container { margin-top: 100px; }
+    .team-image { max-width: 90%; }
+}
+
+@media (max-width: 992px) {
+    /* ... существующие стили ... */
+    .team-image-container { margin-top: 80px; }
+    .team-image { max-width: 95%; }
+}
+
+@media (max-width: 768px) {
+    /* ... существующие стили ... */
+    .repertoire-section,
+    .team-section { padding: 40px 0; margin-top: 40px; }
+    .team-image-container { margin-top: 60px; }
+    .team-image { max-width: 100%; }
+}
+
+@media (max-width: 576px) {
+    /* ... существующие стили ... */
+    .repertoire-section,
+    .team-section { padding: 30px 0; margin-top: 30px; }
+    .team-image-container { margin-top: 50px; }
+    .team-image { max-width: 100%; }
+}
+
+@media (max-width: 400px) {
+    /* ... существующие стили ... */
+    .repertoire-section,
+    .team-section { padding: 30px 0; margin-top: 30px; }
+    .team-image-container { margin-top: 40px; }
+    .team-image { max-width: 100%; }
+}
+.team-image {
+    max-width: 100%%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+}
+.repertoire-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.repertoire-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+}
+
+/* Стили для SVG контейнеров */
+.piano-svg-container,
+.violin-svg-container,
+.disco-svg-container,
+.guitar-svg-container {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.piano-svg,
+.violin-svg,
+.disco-svg,
+.guitar-svg {
+    width: 100%;
+    height: 100%;
+    max-width: 420px;
+    max-height: 360px;
+}
+
+/* Стили для анимации плашек репертуара - ЦЕНТРИРУЕМ ОТНОСИТЕЛЬНО ИНСТРУМЕНТОВ */
+.repertoire-label {
+    position: absolute;
+    top: 50%; /* Центр по вертикали относительно .repertoire-item */
+    left: 50%; /* Центр по горизонтали относительно .repertoire-item */
+    transform: translate(-50%, -50%) scale(0.5);
+    background-color: transparent;
+    border-radius: 30px;
+    padding: 15px 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: transparent;
+    text-align: center;
+    z-index: 30; /* Выше по слою */
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: none;
+    pointer-events: none;
+}
+
+/* Размеры плашек */
+.label-instrumental {
+    width: 330px;
+    height: 47px;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-classic {
+    width: 250px;
+    height: 47px;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-pop {
+    width: 280px;
+    height: 47px;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.label-rock {
+    width: 270px;
+    height: 47px;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Анимация для линий */
+.piano-line,
+.violin-path,
+.disco-path,
+.guitar-line {
+    fill: none;
+    stroke: #FF3A00;
+    stroke-width: 3.75;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-miterlimit: 10;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation-play-state: paused;
+    transition: stroke 0.5s ease;
+}
+
+.animated {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 1.5s ease-in-out forwards;
+    animation-play-state: paused;
+}
+
+.animated-long {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: draw-long 3s ease-in-out forwards;
+    animation-play-state: paused;
+}
+
+@keyframes draw {
+    from {
+        stroke-dashoffset: 1000;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes draw-long {
+    from {
+        stroke-dashoffset: 2000;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ========== ОБНОВЛЕННЫЕ МЕДИА-ЗАПРОСЫ ========== */
+@media (max-width: 1650px) {
+    h1 { font-size: 65px; }
+    .posters-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(280px, 400px)); }
+    .posters-grid[data-count="3"],
+    .posters-grid[data-count="4"],
+    .posters-grid[data-count="5"],
+    .posters-grid[data-count="6"] { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { max-width: 1200px; gap: 40px; }
+    .instrument-animation-container { height: 360px; } /* Возвращаем пропорциональные значения */
+    .repertoire-item { min-height: 450px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 28px;
+        height: 42px;
+    }
+    .label-instrumental { width: 295px; }
+    .label-classic { width: 220px; }
+    .label-pop { width: 250px; }
+    .label-rock { width: 240px; }
+}
+
+@media (max-width: 1600px) {
+    h1 { font-size: 62px; margin-top: -70px; }
+    .main-logo { max-width: 467px; }
+    .section-text { font-size: 48px; margin-bottom: 40px; margin-top: -100px; }
+    .afisha-container { margin-top: -100px; margin-bottom: 40px; }
+    .afisha-text { font-size: 48px; }
+    .animated-rect { width: 260px; height: 95px; }
+    .afisha-text { width: 260px; height: 95px; font-size: 48px; }
+    .header { padding: 12px 35px; }
+    .header-button { width: 210px; height: 36px; font-size: 17px; }
+    .header-social-icon { width: 32px; height: 32px; }
+    .header-logo { height: 41px; }
+    .header.scrolled .header-button { transform: translateX(-110px); }
+    .header.scrolled .social-icons-container { transform: translateX(20px); }
+    .logo-container { margin-bottom: 35px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 200px); margin: 0 100px 0px 100px; border-width: 10px; border-radius: 18px; }
+    .video-controls { gap: 25px; bottom: 40px; }
+    .video-control-btn { width: 45px; height: 45px; }
+    .poster-card-title { font-size: 22px; }
+    .poster-card-ticket { width: 240px; height: 35px; font-size: 22px; }
+    .poster-card-ticket .ticket-arrow { width: 22px; height: 22px; }
+    .placeholder-top-area { height: 300px; }
+    .instrument-icon { width: 100px; height: 100px; }
+    .instrument-icon.large-icon { width: 160px; height: 160px; }
+    .instrument-icon.extra-large-icon { width: 190px; height: 190px; }
+    .placeholder-title { font-size: 22px; }
+    .placeholder-subtitle { font-size: 14px; }
+    .posters-grid { margin-top: 0px; }
+    .posters-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(250px, 380px)); }
+    .footer-logo { left: 450px; width: 280px; height: 158px; }
+    .video-container { margin-top: 130px; }
+    .repertoire-title { font-size: 44px; margin-bottom: 60px; }
+    .repertoire-grid { max-width: 1100px; gap: 35px; }
+    .instrument-animation-container { height: 340px; } /* Возвращаем пропорциональные значения */
+    .repertoire-item { min-height: 430px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 26px;
+        height: 40px;
+    }
+    .label-instrumental { width: 270px; }
+    .label-classic { width: 200px; }
+    .label-pop { width: 230px; }
+    .label-rock { width: 220px; }
+}
+
+@media (max-width: 1400px) {
+    h1 { font-size: 55px; }
+    .posters-grid { padding: 0 30px; margin-top: 0px; }
+    .section-text { margin-top: -100px; }
+    .afisha-container { margin-top: -100px; margin-bottom: 40px; }
+    .afisha-text { font-size: 48px; }
+    .animated-rect { width: 240px; height: 85px; }
+    .afisha-text { width: 240px; height: 85px; font-size: 42px; }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { max-width: 1100px; gap: 35px; }
+    .instrument-animation-container { height: 340px; }
+    .repertoire-item { min-height: 430px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 26px;
+        height: 40px;
+    }
+    .label-instrumental { width: 270px; }
+    .label-classic { width: 200px; }
+    .label-pop { width: 230px; }
+    .label-rock { width: 220px; }
+    .posters-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(250px, 350px)); }
+    .posters-grid[data-count="3"],
+    .posters-grid[data-count="4"],
+    .posters-grid[data-count="5"],
+    .posters-grid[data-count="6"] { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .poster-card-title { font-size: 20px; }
+    .poster-card-ticket { width: 220px; height: 32px; font-size: 20px; }
+    .poster-card-ticket .ticket-arrow { width: 20px; height: 20px; }
+    .placeholder-top-area { height: 280px; }
+    .instrument-icon { width: 90px; height: 90px; }
+    .instrument-icon.large-icon { width: 140px; height: 140px; }
+    .instrument-icon.extra-large-icon { width: 170px; height: 170px; }
+    .placeholder-title { font-size: 20px; }
+    .placeholder-subtitle { font-size: 14px; }
+}
+
+@media (max-width: 1200px) {
+    h1 { font-size: 52px; margin-top: -70px; }
+    .section-text { font-size: 42px; margin-bottom: 40px; margin-top: -100px; }
+    .afisha-container { margin-top: -100px; margin-bottom: 40px; }
+    .afisha-text { font-size: 42px; }
+    .animated-rect { width: 220px; height: 80px; }
+    .afisha-text { width: 220px; height: 80px; font-size: 36px; }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { max-width: 900px; gap: 25px; }
+    .instrument-animation-container { height: 320px; }
+    .repertoire-item { min-height: 400px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 24px;
+        height: 38px;
+        padding: 12px 25px;
+    }
+    .label-instrumental { width: 250px; }
+    .label-classic { width: 185px; }
+    .label-pop { width: 210px; }
+    .label-rock { width: 200px; }
+    .nebula { filter: blur(40px); }
+    .nebula-1 { width: 400px; height: 400px; }
+    .nebula-2 { width: 500px; height: 500px; }
+    .nebula-3 { width: 300px; height: 300px; }
+    .nebula-4 { width: 450px; height: 225px; }
+    .main-logo { max-width: 400px; }
+    .header { padding: 10px 30px; }
+    .header-button { width: 190px; height: 34px; font-size: 16px; }
+    .header-social-icon { width: 30px; height: 30px; }
+    .header-logo { height: 38px; }
+    .header.scrolled .header-button { transform: translateX(-40px); }
+    .header.scrolled .social-icons-container { transform: translateX(40px); }
+    .logo-container { margin-bottom: 30px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 160px); margin: 0 80px 0px 80px; border-width: 8px; border-radius: 16px; }
+    .video-controls { gap: 20px; bottom: 35px; }
+    .video-control-btn { width: 40px; height: 40px; }
+    .section-block { margin-bottom: 1500px; }
+    .main-content { padding-top: 50px; }
+    .poster-card-title { font-size: 18px; }
+    .poster-card-date,
+    .poster-card-venue { font-size: 14px; }
+    .poster-card-ticket { width: 200px; height: 30px; font-size: 18px; }
+    .poster-card-ticket .ticket-arrow { width: 18px; height: 18px; }
+    .placeholder-top-area { height: 250px; }
+    .instrument-icon { width: 80px; height: 80px; }
+    .instrument-icon.large-icon { width: 120px; height: 120px; }
+    .instrument-icon.extra-large-icon { width: 190px; height: 190px; }
+    .placeholder-title { font-size: 18px; }
+    .placeholder-subtitle { font-size: 14px; }
+    .posters-grid { margin-top: 0px; }
+    .posters-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(220px, 320px)); }
+    .footer-logo { left: 350px; width: 250px; height: 141px; }
+    .video-container { margin-top: 110px; margin-bottom: 20px; }
+}
+
+@media (max-width: 992px) {
+    h1 { font-size: 42px; padding: 15px; margin-top: -70px; }
+    .section-text { font-size: 36px; margin-bottom: 40px; margin-top: -80px; }
+    .afisha-container { margin-top: -80px; margin-bottom: 40px; }
+    .afisha-text { font-size: 36px; }
+    .animated-rect { width: 200px; height: 70px; }
+    .afisha-text { width: 200px; height: 70px; font-size: 32px; }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { grid-template-columns: repeat(2, 1fr); max-width: 700px; gap: 20px; }
+    .instrument-animation-container { height: 280px; }
+    .repertoire-item { min-height: 350px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 20px;
+        height: 35px;
+        padding: 10px 20px;
+        border-radius: 25px;
+    }
+    .label-instrumental { width: 200px; }
+    .label-classic { width: 150px; }
+    .label-pop { width: 170px; }
+    .label-rock { width: 160px; }
+    .nebula { filter: blur(30px); opacity: 0.1; }
+    .nebula-1 { width: 300px; height: 300px; }
+    .nebula-2 { width: 400px; height: 400px; }
+    .nebula-3 { width: 250px; height: 250px; }
+    .nebula-4 { width: 350px; height: 175px; }
+    .main-logo { max-width: 333px; }
+    .header { padding: 8px 25px; }
+    .header-button { width: 170px; height: 32px; font-size: 15px; }
+    .header-social-icon { width: 28px; height: 28px; }
+    .header-logo { height: 35px; }
+    .header.scrolled .header-button { transform: translateX(-30px); }
+    .header.scrolled .social-icons-container { transform: translateX(30px); }
+    .logo-container { margin-bottom: 25px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 120px); margin: 0 60px 0px 60px; border-width: 6px; border-radius: 14px; }
+    .video-controls { gap: 15px; bottom: 30px; }
+    .video-control-btn { width: 35px; height: 35px; }
+    .section-block { margin-bottom: 1200px; }
+    .main-content { padding-top: 45px; }
+    .posters-grid { gap: 30px; margin-top: -10px; }
+    .poster-card { border-radius: 18px; }
+    .poster-card-title { font-size: 18px; }
+    .poster-card-content { padding: 15px; }
+    .poster-card-date,
+    .poster-card-venue { font-size: 13px; }
+    .poster-card-ticket { width: 180px; height: 28px; font-size: 16px; }
+    .poster-card-ticket .ticket-arrow { width: 16px; height: 16px; right: 15px; }
+    .placeholder-top-area { height: 200px; }
+    .instrument-icon { width: 70px; height: 70px; }
+    .instrument-icon.large-icon { width: 100px; height: 100px; }
+    .instrument-icon.extra-large-icon { width: 130px; height: 130px; }
+    .placeholder-title { font-size: 18px; }
+    .placeholder-subtitle { font-size: 13px; }
+    .posters-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(200px, 300px)); }
+    .posters-grid[data-count="3"],
+    .posters-grid[data-count="4"],
+    .posters-grid[data-count="5"],
+    .posters-grid[data-count="6"] { grid-template-columns: repeat(2, minmax(250px, 1fr)); }
+    .footer-logo { left: 250px; width: 220px; height: 124px; }
+    .footer-social-text { font-size: 20px; top: 80px; }
+    .video-container { margin-top: 100px; margin-bottom: 50px; }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 31px; padding: 10px; margin-top: -70px; }
+    .section-text { font-size: 28px; margin-bottom: 40px; margin-top: -60px; }
+    .afisha-container { margin-top: -60px; margin-bottom: 40px; }
+    .afisha-text { font-size: 28px; }
+    .animated-rect { width: 180px; height: 65px; border-radius: 50px; }
+    .afisha-text { width: 180px; height: 65px; font-size: 28px; }
+    .repertoire-section { padding: 40px 0; margin-top: 40px; }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { grid-template-columns: 1fr; max-width: 500px; gap: 40px; }
+    .instrument-animation-container { height: 320px; }
+    .repertoire-item { min-height: 400px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 24px;
+        height: 40px;
+        padding: 12px 25px;
+        border-radius: 30px;
+    }
+    .label-instrumental { width: 240px; }
+    .label-classic { width: 180px; }
+    .label-pop { width: 200px; }
+    .label-rock { width: 190px; }
+    .nebula { filter: blur(20px); opacity: 0.08; }
+    .nebula-1 { width: 200px; height: 200px; }
+    .nebula-2 { width: 250px; height: 250px; }
+    .nebula-3 { width: 150px; height: 150px; }
+    .nebula-4 { width: 200px; height: 100px; }
+    .main-logo { max-width: 267px; }
+    .header { padding: 6px 20px; }
+    .header-button { width: 140px; height: 28px; font-size: 13px; }
+    .header-social-icon { width: 26px; height: 26px; }
+    .header-logo { height: 32px; max-width: 100px; }
+    .header.scrolled .header-button { transform: translateX(-20px); }
+    .header.scrolled .social-icons-container { transform: translateX(20px); }
+    .logo-container { margin-bottom: 20px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 80px); margin: 0 40px 0px 40px; border-width: 5px; border-radius: 12px; }
+    .video-controls { gap: 12px; bottom: 25px; }
+    .video-control-btn { width: 30px; height: 30px; }
+    .section-block { margin-bottom: 1000px; }
+    .main-content { padding-top: 40px; }
+    .posters-grid { grid-template-columns: 1fr; max-width: 90%; gap: 20px; margin-top: -20px; padding: 0 20px; }
+    .posters-grid[data-count="2"],
+    .posters-grid[data-count="3"],
+    .posters-grid[data-count="4"],
+    .posters-grid[data-count="5"],
+    .posters-grid[data-count="6"] { grid-template-columns: 1fr; }
+    .poster-card { border-radius: 16px; max-width: 400px; margin: 0 auto; }
+    .poster-card-title { font-size: 16px; }
+    .poster-card-content { padding: 15px; }
+    .poster-card-date,
+    .poster-card-venue { font-size: 12px; }
+    .poster-card-ticket { width: 160px; height: 26px; font-size: 14px; }
+    .poster-card-ticket .ticket-arrow { width: 14px; height: 14px; right: 12px; }
+    .placeholder-top-area { height: 180px; }
+    .instrument-icon { width: 60px; height: 60px; }
+    .instrument-icon.large-icon { width: 90px; height: 90px; }
+    .instrument-icon.extra-large-icon { width: 110px; height: 110px; }
+    .placeholder-title { font-size: 16px; }
+    .placeholder-subtitle { font-size: 12px; }
+    .footer { height: 300px; }
+    .footer-logo { left: 180px; width: 180px; height: 102px; }
+    .footer-social-text { font-size: 18px; top: 70px; }
+    .video-container { margin-top: 90px; margin-bottom: 40px; }
+}
+
+@media (max-width: 576px) {
+    h1 { font-size: 24px; line-height: 1.2; margin-top: -70px; }
+    .section-text { font-size: 22px; margin-bottom: 40px; margin-top: -40px; }
+    .afisha-container { margin-top: -40px; margin-bottom: 40px; }
+    .afisha-text { font-size: 22px; }
+    .animated-rect { width: 160px; height: 55px; border-radius: 40px; }
+    .afisha-text { width: 160px; height: 55px; font-size: 22px; }
+    .repertoire-section { padding: 30px 0; margin-top: 30px; }
+    .repertoire-title,
+.team-title { font-size: 48px; margin-bottom: 60px; }
+    .repertoire-grid { gap: 30px; padding: 0 20px; }
+    .instrument-animation-container { height: 280px; }
+    .repertoire-item { min-height: 350px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 20px;
+        height: 35px;
+        padding: 10px 20px;
+        border-radius: 25px;
+    }
+    .label-instrumental { width: 200px; }
+    .label-classic { width: 150px; }
+    .label-pop { width: 170px; }
+    .label-rock { width: 160px; }
+    .nebula { display: none; }
+    .nebula-1, .nebula-4 { display: block; filter: blur(15px); opacity: 0.06; }
+    .nebula-1 { width: 150px; height: 150px; top: 20%; left: 10%; }
+    .nebula-4 { width: 120px; height: 60px; top: 60%; left: 60%; }
+    .main-logo { max-width: 200px; }
+    .header { padding: 5px 15px; }
+    .header-button { width: 120px; height: 26px; font-size: 11px; }
+    .header-social-icon { width: 24px; height: 24px; }
+    .header-logo { height: 30px; max-width: 80px; }
+    .header.scrolled .header-button { transform: translateX(-15px); }
+    .header.scrolled .social-icons-container { transform: translateX(15px); }
+    .logo-container { margin-bottom: 15px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 40px); margin: 0 20px 0px 20px; border-width: 4px; border-radius: 10px; }
+    .video-controls { gap: 10px; bottom: 20px; }
+    .video-control-btn { width: 28px; height: 28px; }
+    .section-block { margin-bottom: 800px; }
+    .section-block:last-child { margin-bottom: 40px; }
+    .additional-sections { margin-top: 40px; }
+    .main-content { padding-top: 35px; }
+    .posters-grid { gap: 15px; margin-top: -30px; }
+    .poster-card { border-radius: 14px; max-width: 300px; }
+    .poster-card-title { font-size: 14px; }
+    .poster-card-content { padding: 12px; }
+    .poster-card-date,
+    .poster-card-venue { font-size: 11px; }
+    .poster-card-ticket { width: 140px; height: 24px; font-size: 12px; }
+    .poster-card-ticket .ticket-arrow { width: 12px; height: 12px; right: 10px; }
+    .placeholder-top-area { height: 150px; }
+    .instrument-icon { width: 50px; height: 50px; }
+    .instrument-icon.large-icon { width: 80px; height: 80px; }
+    .instrument-icon.extra-large-icon { width: 100px; height: 100px; }
+    .placeholder-title { font-size: 14px; }
+    .placeholder-subtitle { font-size: 11px; }
+    .footer { height: 250px; }
+    .footer-logo { left: calc(50% - 90px); width: 150px; height: 85px; }
+    .footer-social-text { font-size: 16px; top: 60px; }
+    .video-container { margin-top: 80px; margin-bottom: 30px; }
+}
+
+@media (max-width: 400px) {
+    h1 { font-size: 20px; }
+    .main-logo { max-width: 167px; }
+    .section-text { font-size: 18px; margin-bottom: 40px; margin-top: -30px; }
+    .afisha-container { margin-top: -30px; margin-bottom: 40px; }
+    .afisha-text { font-size: 18px; }
+    .animated-rect { width: 140px; height: 50px; border-radius: 30px; }
+    .afisha-text { width: 140px; height: 50px; font-size: 18px; }
+   .repertoire-title,
+.team-title { font-size: 18px; margin-bottom: 60px; }
+    .repertoire-grid { gap: 25px; padding: 0 15px; }
+    .instrument-animation-container { height: 250px; }
+    .repertoire-item { min-height: 320px; }
+    .label-instrumental,
+    .label-classic,
+    .label-pop,
+    .label-rock {
+        font-size: 18px;
+        height: 32px;
+        padding: 8px 16px;
+        border-radius: 20px;
+    }
+    .label-instrumental { width: 180px; }
+    .label-classic { width: 135px; }
+    .label-pop { width: 150px; }
+    .label-rock { width: 140px; }
+    .header { padding: 4px 12px; }
+    .header-button { width: 100px; height: 24px; font-size: 10px; }
+    .header-social-icon { width: 22px; height: 22px; }
+    .header-logo { height: 28px; max-width: 70px; }
+    .header.scrolled .header-button { transform: translateX(-10px); }
+    .header.scrolled .social-icons-container { transform: translateX(10px); }
+    .logo-container { margin-bottom: 10px; transform: translateY(-130px); }
+    .video-wrapper { width: calc(100% - 20px); margin: 0 10px 0px 10px; border-width: 3px; border-radius: 8px; }
+    .video-controls { gap: 8px; bottom: 15px; }
+    .video-control-btn { width: 25px; height: 25px; }
+    .section-block { margin-bottom: 600px; }
+    .section-block:last-child { margin-bottom: 20px; }
+    .additional-sections { margin-top: 20px; }
+    .main-content { padding-top: 30px; }
+    .posters-grid { gap: 12px; margin-top: -35px; }
+    .poster-card { border-radius: 12px; max-width: 250px; }
+    .poster-card-title { font-size: 12px; }
+    .poster-card-content { padding: 10px; }
+    .poster-card-date,
+    .poster-card-venue { font-size: 10px; }
+    .poster-card-ticket { width: 120px; height: 22px; font-size: 10px; }
+    .poster-card-ticket .ticket-arrow { width: 10px; height: 10px; right: 8px; }
+    .placeholder-top-area { height: 130px; }
+    .instrument-icon { width: 45px; height: 45px; }
+    .instrument-icon.large-icon { width: 70px; height: 70px; }
+    .instrument-icon.extra-large-icon { width: 85px; height: 85px; }
+    .placeholder-title { font-size: 12px; }
+    .placeholder-subtitle { font-size: 10px; }
+    .footer { height: 200px; }
+    .footer-logo { left: calc(50% - 75px); width: 120px; height: 68px; }
+    .footer-social-text { font-size: 14px; top: 50px; }
+    .video-container { margin-top: 70px; margin-bottom: 20px; }
+}
+
+    </style>
+</head>
+<body>
+    <!-- ========== ШАПКА ========== -->
+    <div class="header" id="header">
+        <div class="header-content">
+            <button class="header-button">Организаторам</button>
+            <img src="logo_main.png" alt="MoonEclipse Logo" class="header-logo">
+            <div class="social-icons-container">
+                <a href="https://vk.com" target="_blank">
+                    <img src="vk.logo.svg" alt="VK" class="header-social-icon">
+                </a>
+                <a href="https://t.me" target="_blank">
+                    <img src="tg.logo.svg" alt="Telegram" class="header-social-icon">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ЗВЕЗДНОЕ ПОЛЕ ========== -->
+    <canvas id="starfield"></canvas>
+    <div id="universe">
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+        <div class="nebula nebula-4"></div>
+    </div>
+
+    <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
+    <div class="main-content">
+        <div class="logo-container" id="logoContainer">
+            <img src="logo_main.png" alt="MoonEclipse Logo" class="main-logo" id="mainLogo">
+        </div>
+        <h1 id="mainHeading">Где мастерство встречается<br>с искренностью — рождается<br>наша музыка</h1>
+        
+        <!-- ========== ВИДЕО-ПЛЕЕР ========== -->
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video id="background-video" autoplay loop muted playsinline>
+                    <source src="video.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает видео тег.
+                </video>
+                <div class="video-controls">
+                    <button class="video-control-btn" id="playButton">
+                        <img src="play1.svg" alt="Пауза/Воспроизведение" class="video-control-icon" id="playIcon">
+                    </button>
+                    <button class="video-control-btn" id="muteButton">
+                        <img src="mute2.svg" alt="Звук" class="video-control-icon" id="muteIcon">
+                    </button>
+                    <button class="video-control-btn" id="fullscreenButton">
+                        <img src="scale.svg" alt="Полноэкранный режим" class="video-control-icon" id="fullscreenIcon">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== БЛОК АФИША ========== -->
+    <div class="additional-sections">
+        <div class="section-block" id="section1">
+            <div class="afisha-container" id="afishaContainer">
+                <div class="animated-rect" id="animatedRect"></div>
+                <div class="afisha-text" id="afishaText">Афиша</div>
+            </div>
+            
+            <!-- ========== СЕТКА АФИШ ========== -->
+            <div class="posters-grid" data-count="2">
+                <div class="poster-card">
+                    <div class="poster-card-image-container">
+                        <div class="poster-card-image-mask">
+                            <img src="1.png" alt="Seasons Concert" class="poster-card-image">
+                        </div>
+                    </div>
+                    <div class="poster-card-content">
+                        <div class="poster-card-title">Seasons Tour 2024</div>
+                        <div class="poster-card-info">
+                            <div class="poster-card-date">15 декабря 2024, 20:00</div>
+                            <div class="poster-card-venue">Крокус Сити Холл, Москва</div>
+                            <button class="poster-card-ticket">
+                                <span class="ticket-text">Купить билет</span>
+                                <img src="Стрелка.svg" alt="" class="ticket-arrow">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ========== КАРТОЧКА-ЗАГЛУШКА ========== -->
+                <div class="poster-card placeholder-card">
+                    <div class="placeholder-top-area">
+                        <img src="Скрипка.svg" alt="Инструмент" class="instrument-icon" id="instrument-icon">
+                        <div class="placeholder-divider"></div>
+                    </div>
+                    <div class="placeholder-bottom-area">
+                        <div class="placeholder-title">Готовимся<br>к новому концерту</div>
+                        <div class="placeholder-subtitle">Сообщим, когда все будет готово</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== НОВЫЙ БЛОК "НАШ РЕПЕРТУАР" С СЕТКОЙ 2x2 ========== -->
+    <div class="repertoire-section">
+        <div class="repertoire-title">Наш репертуар — от классики <br> до современной музыки</div>
+        
+        <div class="repertoire-grid">
+            <!-- 1. Инструментал -->
+            <div class="repertoire-item" id="instrumental-item">
+                <div class="instrument-animation-container">
+                    <div class="piano-svg-container" id="pianoSvgContainer">
+                        <svg class="piano-svg" width="420" height="360" viewBox="0 0 420 360">
+                            <path d="M0,0 L0,360 L420,360 L420,0 Z" class="page-border"/>
+                            <g transform="translate(0, 360) scale(1, -1)">
+                                <path class="piano-line animated delay-0" d="M23.1,167.7 L51.6,181.2"/>
+                                <path class="piano-line animated-long delay-1" d="M204.5,96.9 L14.3,154.8"/>
+                                <path class="piano-line animated-long delay-2" d="M267.5,337.2 L324.3,172.8"/>
+                                <path class="piano-line animated-long delay-3" d="M31.0,220.0 C41.8,224.3 60.6,229.0 79.7,229.2"/>
+                                <path class="piano-line animated-long delay-4" d="M245.9,162.0 L31.0,220.0"/>
+                                <path class="piano-line animated delay-5" d="M85.6,229.1 C83.6,229.3 81.7,229.4 79.7,229.2"/>
+                                <path class="piano-line animated delay-6" d="M85.6,229.1 L284.5,242.7"/>
+                                <path class="piano-line animated delay-7" d="M85.6,229.1 L267.7,185.7"/>
+                                <path class="piano-line animated delay-8" d="M237.7,80.5 L332.6,108.2"/>
+                                <path class="piano-line animated-long delay-9" 
+                                      d="M237.7,80.5 L263.2,69.8 
+                                         C263.5,69.6 263.7,69.3 263.8,68.9
+                                         L270.0,3.9
+                                         C270.1,3.4 270.5,3.0 271.0,3.0
+                                         L289.4,3.0
+                                         C289.9,3.0 290.3,3.4 290.4,3.9
+                                         L295.6,69.0
+                                         C295.7,69.3 295.9,69.6 296.2,69.8
+                                         L328.9,87.3
+                                         C329.0,87.4 329.1,87.5 329.2,87.6
+                                         C331.2,89.7 334.5,96.7 332.6,108.2"/>
+                                <path class="piano-line animated delay-10" d="M377.3,121.3 L332.6,108.2"/>
+                                <path class="piano-line animated-long delay-11" 
+                                      d="M220.8,75.5 L219.2,70.1
+                                         C219.0,69.5 218.5,69.1 218.0,69.2
+                                         L70.5,112.1
+                                         C69.9,112.3 69.4,111.9 69.3,111.3
+                                         L62.6,59.1
+                                         C62.5,58.6 62.1,58.2 61.6,58.2
+                                         L48.6,58.2
+                                         C48.0,58.2 47.6,58.7 47.5,59.2
+                                         L40.9,117.8
+                                         C40.8,118.2 40.5,118.5 40.2,118.6
+                                         L3.1,134.5
+                                         C2.7,134.7 2.5,135.1 2.5,135.5
+                                         L2.5,165.3
+                                         C2.5,169.8 8.0,180.1 24.4,185.4
+                                         C24.8,185.5 25.1,185.8 25.1,186.2
+                                         L25.6,216.8
+                                         C25.6,217.2 25.8,217.5 26.2,217.6
+                                         C27.5,218.2 29.1,218.8 31.0,220.0"/>
+                                <path class="piano-line animated delay-12" d="M220.8,75.5 L237.7,80.5"/>
+                                <path class="piano-line animated-long delay-13" 
+                                      d="M220.8,75.5 L220.8,97.6
+                                         C220.8,103.0 228.3,108.2 232.1,110.1
+                                         C232.2,110.1 232.3,110.2 232.4,110.2
+                                         L245.8,114.0
+                                         C245.9,114.0 246.1,114.1 246.2,114.1
+                                         C253.5,114.3 258.3,126.0 259.8,132.2
+                                         C259.8,132.3 259.8,132.4 259.8,132.5
+                                         L260.7,157.1
+                                         C260.7,157.6 261.0,158.0 261.5,158.1
+                                         L324.3,172.8"/>
+                                <path class="piano-line animated-long delay-14" 
+                                      d="M417.8,219.0 L417.8,162.4
+                                         C417.8,162.0 417.6,161.6 417.4,161.4
+                                         L398.5,149.3
+                                         C398.2,149.1 398.0,148.8 398.0,148.4
+                                         L392.8,87.8
+                                         C392.7,87.2 392.3,86.8 391.7,86.8
+                                         L378.3,86.8
+                                         C377.7,86.8 377.3,87.2 377.3,87.8
+                                         L377.3,121.3"/>
+                                <path class="piano-line animated-long delay-15" 
+                                      d="M417.8,219.0 
+                                         C429.2,234.0 373.9,242.1 337.3,244.4
+                                         C336.2,244.5 336.2,246.1 337.3,246.4
+                                         C455.3,279.1 388.4,300.8 339.5,307.6
+                                         C322.7,308.5 319.1,315.8 319.3,320.4
+                                         C319.3,320.7 319.5,321.0 319.7,321.2
+                                         C375.6,363.3 308.6,358.3 267.9,350.2
+                                         C267.8,350.2 267.6,350.1 267.5,350.1
+                                         L79.7,229.2"/>
+                                <path class="piano-line animated delay-16" d="M377.3,190.1 L377.3,121.3"/>
+                                <path class="piano-line animated delay-17" 
+                                      d="M377.3,190.1 L370.7,183.5
+                                         C370.5,183.3 370.3,183.2 370.1,183.1
+                                         L324.3,172.8"/>
+                                <path class="piano-line animated-long delay-18" 
+                                      d="M377.3,190.1 
+                                         C365.8,197.9 372.6,202.9 377.3,204.3
+                                         L412.1,214.2
+                                         C412.2,214.2 412.3,214.3 412.5,214.3
+                                         C414.9,215.8 417.0,217.2 417.8,219.0"/>
+                                <path class="piano-line animated delay-19" d="M42.3,160.8 L68.4,176.2"/>
+                                <path class="piano-line animated delay-20" d="M63.5,155.0 L89.6,170.4"/>
+                                <path class="piano-line animated delay-21" d="M80.2,150.0 L106.3,165.4"/>
+                                <path class="piano-line animated delay-22" d="M100.9,144.0 L127.0,159.4"/>
+                                <path class="piano-line animated delay-23" d="M120.5,138.2 L146.6,153.6"/>
+                                <path class="piano-line animated delay-24" d="M141.2,133.0 L167.3,148.4"/>
+                                <path class="piano-line animated delay-25" d="M161.9,127.2 L188.0,142.6"/>
+                                <path class="piano-line animated delay-26" d="M181.5,121.4 L207.6,136.8"/>
+                                <path class="piano-line animated delay-27" d="M201.2,115.4 L227.3,130.8"/>
+                                <path class="piano-line animated delay-28" d="M41.8,160.8 L68.4,176.5"/>
+                                <path class="piano-line animated-long delay-29" d="M240.5,127.3 L68.4,176.5"/>
+                                <path class="piano-line animated-long delay-30" 
+                                      d="M22.6,167.7 L51.8,181.9
+                                         C52.0,182.0 52.3,182.0 52.5,181.9
+                                         L68.4,176.5"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div class="repertoire-label label-instrumental">Инструментал</div>
+            </div>
+            
+            <!-- 2. Классика -->
+            <div class="repertoire-item" id="classic-item">
+                <div class="instrument-animation-container">
+                    <div class="violin-svg-container" id="violinSvgContainer">
+                        <svg class="violin-svg" viewBox="0 0 359 702" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.98964 593.289C1.15686 549.908 29.8268 510.694 45.1409 496.509C56.159 484.665 54.5844 471.288 51.931 464.67C51.4796 463.544 51.7257 463.185 52.7662 463.808C57.522 466.658 72.0953 475.013 85.8108 462.994C109.688 442.07 132.225 378.875 104.392 381.235C102.762 381.374 101.133 380.61 100.432 379.13C99.3727 376.894 100.92 374.108 103.036 372.825C107.524 370.102 112.403 363.676 112.545 350.606C112.549 350.222 112.52 349.842 112.464 349.462C107.537 315.894 119.896 250.005 208.575 250.604M8.98964 593.289L6.57562 594.764C3.94093 596.374 2.51809 599.425 3.32491 602.405C9.43766 624.986 33.6792 665.486 92.7606 680.135C93.1423 680.23 93.5245 680.355 93.8878 680.505C95.1826 681.043 96.5077 681.577 97.8613 682.107M8.98964 593.289C31.8351 586.887 80.6894 586.812 93.3423 637.725M268.827 525.129C275.934 525.806 280.523 528.257 283.313 530.854C286.115 533.462 283.984 537.318 281.349 540.095C277.135 544.536 275.422 551.311 274.974 555.912C274.848 557.208 275.204 558.481 275.628 559.712C278.976 569.418 278.308 594.918 277.488 607.223C267.508 710.529 173.265 706.429 112.924 687.411M268.827 525.129C262.802 529.02 252.559 543.506 259.789 570.318C265.297 605.62 253.677 678.074 163.375 686.238C162.892 686.282 162.393 686.278 161.911 686.224C152.918 685.22 135.983 682.658 121.962 678.717M268.827 525.129C245.626 491.742 258.351 447.514 276.975 434.131C282.682 430.031 291.062 421.126 291.413 414.108C291.457 413.21 291.514 412.34 291.579 411.515C291.7 409.968 292.352 408.524 293.348 407.334C305.567 392.731 315.161 373.276 318.535 365.084C335.137 312.415 292.086 277.107 265.033 264.135C262.518 262.929 260.765 260.541 260.52 257.763L258.795 238.207C258.705 237.194 258.822 236.173 259.138 235.206L295.164 124.987C296.093 122.145 298.784 120.12 301.016 118.129C304.643 114.894 308.174 108.366 311.414 100.351M268.827 525.129C225.286 526.438 230.127 422.692 267.763 422.527C274.823 422.495 275.479 423.023 274.79 415.997C274.347 411.473 274.718 406.709 275.281 403.091C275.472 401.868 276.044 400.7 276.815 399.732C332.154 330.333 293.432 286.143 261.661 269.41C257.852 267.404 253.299 269.439 251.845 273.491L208.481 394.364C207.408 397.356 204.64 398.821 201.573 397.985C194.252 395.987 180.462 392.177 169.478 389.135C165.199 387.95 162.871 383.341 164.454 379.193L268.45 106.753C268.59 106.148 268.739 105.52 268.899 104.87M97.8613 682.107L105.661 676.685C107.831 675.176 110.625 674.938 113.101 675.863C115.827 676.882 118.822 677.834 121.962 678.717M97.8613 682.107C102.566 683.948 107.614 685.738 112.924 687.411M112.924 687.411L121.962 678.717M93.3423 637.725C92.0209 649.017 98.7471 672.151 115.171 660.256C116.678 659.165 117.556 657.428 117.815 655.586C121.018 632.773 132.432 588.103 156.586 558.87C160.23 554.46 158.637 547.412 153.205 545.615L151.335 544.996M93.3423 637.725C112.171 607.599 109.159 560.151 109.159 557.891C109.159 548.619 110.446 541.932 111.808 537.68C112.811 534.551 116.175 533.362 119.294 534.394L121.586 535.153M83.9279 485.588C79.9111 491.864 81.8571 497.619 88.8234 498.768C104.104 501.289 114.054 459.604 114.054 459.604C114.054 459.604 135.519 400.859 143.427 433.244M202.926 451.32C202.926 440.161 221.736 434.073 219.585 468.47C219.533 469.312 219.328 470.153 218.997 470.929C209.572 493.045 197.787 534.528 220.264 537.058C221.719 537.221 223.188 536.785 224.291 535.822C227.261 533.229 230.144 528.877 225.897 525.129M119.326 551.866L121.586 535.153M121.586 535.153L130.247 538.309M121.586 535.153L136.272 475.495M127.611 555.631L130.247 538.309M130.247 538.309L141.167 541.698M130.247 538.309L147.569 482.952M145.31 561.28C145.31 560.677 148.825 549.671 151.335 544.996M151.335 544.996L141.167 541.698M151.335 544.996L169.787 487.285M136.649 557.891L141.167 541.698M141.167 541.698L158.867 485.823M147.569 482.952C146.453 482.506 140.179 479.811 136.272 475.495M147.569 482.952C147.804 483.023 151.433 473.402 153.218 468.583M147.569 482.952C151.683 484.202 155.444 485.14 158.867 485.823M136.272 475.495C134.741 473.804 133.573 471.863 133.221 469.712C132.71 466.585 136.173 464.83 139.285 465.424M136.272 475.495C136.272 474.833 138.28 468.505 139.285 465.424M139.285 465.424C143.432 466.215 148.253 467.275 153.218 468.583M153.218 468.583C156.596 469.472 160.041 470.477 163.385 471.59M158.867 485.823L163.385 471.59M158.867 485.823C162.99 486.646 166.621 487.1 169.787 487.285M163.385 471.59C166.938 472.772 170.377 474.076 173.504 475.495M169.787 487.285C173.92 487.527 177.259 487.31 179.863 486.86C183.747 486.188 184.501 481.965 181.248 479.739C179.043 478.229 176.408 476.813 173.504 475.495M169.787 487.285L173.504 475.495M298.576 51.3959L307.238 52.5256M298.576 51.3959C298.576 50.323 293.319 45.4596 294.578 35.2031M298.576 51.3959C293.707 53.0515 289.231 57.7163 285.276 63.8229M325.69 49.513L321.547 51.2656M325.69 49.513C328.867 48.502 331.364 45.9504 333.213 43.1112M325.69 49.513C324.986 53.1091 324.098 57.2723 323.054 61.7434M307.238 52.5256L313.872 53.391C315.199 53.5641 316.548 53.3805 317.781 52.8591L321.547 51.2656M307.238 52.5256C304.601 45.2452 301.815 27.7469 311.756 15.9978M321.547 51.2656C316.777 43.9281 310.928 24.5385 325.69 5.67958M325.69 5.67958L318.148 3.4172C315.39 2.58956 312.385 3.3953 310.505 5.57695C307.033 9.60428 304.257 13.3234 302.055 16.7509M325.69 5.67958L325.955 5.75926C327.725 6.29007 329.269 7.43858 330.009 9.13093C331.524 12.5919 333.025 17.9783 332.398 23.7046C332.147 26.0003 332.515 28.3804 333.885 30.2397L334.903 31.6219C336.224 33.4146 336.723 35.7174 335.915 37.7921C335.258 39.4762 334.36 41.3491 333.213 43.1112M333.213 43.1112C333.453 42.7347 319.665 38.2158 327.949 24.659M294.578 35.2031L291.142 33.2496C287.545 31.2045 286.271 26.6404 288.29 23.0283L289.642 20.6084C290.973 18.2266 293.488 16.7509 296.217 16.7509H302.055M294.578 35.2031C295.177 30.3282 297.248 24.2348 302.055 16.7509M285.276 63.8229L271.294 60.4561C269.242 59.9619 267.525 58.6058 266.335 56.8625C266.048 56.4424 265.749 56.0228 265.438 55.6078M285.276 63.8229C284.724 64.675 284.182 65.5551 283.651 66.459C282.594 68.2586 281.577 70.1527 280.606 72.1076M262.802 67.5887C252.269 74.3404 247.204 66.465 245.544 60.2401C245.188 58.9034 245.365 57.4761 245.965 56.2293C252.195 43.2723 260.368 48.8459 265.438 55.6078M262.802 67.5887C263.404 67.2874 264.81 59.4759 265.438 55.6078M262.802 67.5887L280.606 72.1076M280.606 72.1076C276.676 80.0132 273.47 88.913 271.168 96.585M271.168 96.585L253.011 92.0661M271.168 96.585C270.86 97.6131 270.568 98.6191 270.293 99.5977C269.766 101.467 269.301 103.237 268.899 104.87M253.011 92.0661C249.901 84.8911 241.848 74.982 233.539 89.6881C232.691 91.1892 232.465 93.0004 233.096 94.6048C235.341 100.312 241.07 106.872 251.504 100.351M253.011 92.0661L251.504 100.351M251.504 100.351L268.899 104.87M311.414 100.351C312.658 97.2724 313.86 93.9746 315.008 90.5598M311.414 100.351L324.183 105.623M311.414 100.351C307.996 98.2922 304.014 95.0109 305.084 92.8193C305.775 91.4028 308.578 90.4416 315.008 90.5598M315.008 90.5598L327.573 95.0787M315.008 90.5598C318.178 81.1278 320.937 70.8034 323.054 61.7434M327.573 95.0787C330.122 91.255 336.692 86.7254 343.849 96.477C345.084 98.1598 345.354 100.373 344.572 102.308C341.294 110.427 334.045 119.216 324.183 105.623M327.573 95.0787L324.183 105.623M315.008 66.459C318.317 68.5929 326.97 73.0114 335.104 73.6139M335.104 73.6139C335.714 77.1489 339.188 83.3355 348.216 80.6555C348.765 80.4927 349.284 80.2454 349.755 79.9208C355.371 76.0476 361.221 67.6225 345.798 60.5536C344.491 59.9548 342.994 59.7748 341.659 60.3067C339.674 61.0972 337.418 62.5815 336.987 64.9527M335.104 73.6139L336.987 64.9527M336.987 64.9527L323.054 61.7434" 
+                                  class="violin-path animated-long delay-0"/>
+                            
+                            <path d="M138.711 466.065L277.371 110.266C279.511 104.776 274.321 99.2614 268.711 101.065M151.711 468.565L285.641 108.598C286.018 107.582 286.229 106.515 286.26 105.432C286.713 89.4319 286.689 61.8805 283.211 68.0645" 
+                                  class="violin-path animated delay-1"/>
+                            
+                            <path d="M163.211 472.564L289.211 117.564C293.211 99.7308 303.911 64.2641 314.711 65.0641" 
+                                  class="violin-path animated delay-2"/>
+                            
+                            <path d="M173.711 476.564L214.211 354.064L252.711 245.564L301.954 100.819C302.125 100.317 302.336 99.829 302.584 99.3605L306.711 91.5645" 
+                                  class="violin-path animated delay-3"/>
+                            
+                            <path d="M267.211 107.064L297.711 122.064" 
+                                  class="violin-path animated delay-4"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="repertoire-label label-classic">Классика</div>
+            </div>
+            
+            <!-- 3. Поп-хиты -->
+            <div class="repertoire-item" id="pop-item">
+                <div class="instrument-animation-container">
+                    <div class="disco-svg-container" id="discoSvgContainer">
+                        <svg class="disco-svg" viewBox="0 0 594 635" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M290.5 7V119M290.5 119C285.5 118.5 275.5 121.4 275.5 137V152H305V137C305.833 131 304.1 119 290.5 119ZM290.5 152V171M290.5 522V171M290.5 522C296.034 521.969 302.083 521.606 308.5 520.851M290.5 522C283.07 522 275.932 521.606 269.076 520.851M290.5 171C296.701 171 302.699 171.28 308.5 171.817M290.5 171C284.058 171.176 276.83 171.818 269.076 173.021M115.5 336.5C116.861 315.627 120.937 297.212 127.046 281M115.5 336.5C172.167 327.167 321 314.1 463 336.5M115.5 336.5C116.125 347.546 117.912 360.565 121.176 374.5M463 336.5C461.278 321.099 456.676 301.399 448.255 281M463 336.5C463.236 348.933 462.624 360.585 461.271 371.5M227 184.224C241.685 178.616 256.116 175.033 269.076 173.021M227 184.224C218.108 192.791 208.557 203.987 199.5 217.407M227 184.224C187.809 199.189 146.8 228.574 127.046 281M222 508.6C235.968 514.659 251.605 518.926 269.076 520.851M222 508.6C180.829 490.742 154.16 457.325 137.773 422.5M222 508.6C216.374 501.707 211.185 494.837 206.41 488M345.5 179.386C334.168 175.665 321.857 173.056 308.5 171.817M345.5 179.386C354.944 189.152 365.198 202.018 374.872 217.407M345.5 179.386C399.724 197.194 431.525 240.475 448.255 281M358.5 507.984C341.093 515.04 323.759 519.055 308.5 520.851M358.5 507.984C393.335 493.864 428.459 467.564 447.824 422.5M358.5 507.984C363.73 501.317 368.544 494.652 372.963 488M308.5 171.817C342.5 220.445 390.1 358.331 308.5 520.851M269.076 520.851C236.102 462.748 189.937 311.838 269.076 173.021M199.5 217.407C231.915 214.709 312.369 210.932 374.872 217.407M199.5 217.407C159.761 276.289 129.551 377.963 206.41 488M374.872 217.407C413.797 279.327 443.332 382.086 372.963 488M127.046 281C191.867 266.833 346.858 247 448.255 281M121.176 374.5C175.798 385.167 320.288 399.5 461.271 371.5M121.176 374.5C124.773 389.859 130.165 406.332 137.773 422.5M461.271 371.5C458.891 390.703 454.216 407.624 447.824 422.5M137.773 422.5C177.398 439.5 294.883 463.3 447.824 422.5M206.41 488C230.415 491 297.334 495.2 372.963 488M412.5 188.5C414.5 188.1 460.667 135 483.5 108.5M489 250L537.5 226M507.5 342H586.5M489 435L541.5 462.5M427.5 508.6L466.5 550.5M290.5 567V628M149.5 507.984L112.5 543.5M98.5 427L44.5 452.5M55.5 342.5H7M98.5 264.5L37.5 235M127.046 162L90 126"
+                                  class="disco-path animated-long delay-0"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="repertoire-label label-pop">Поп-хиты</div>
+            </div>
+            
+            <!-- 4. Рок-хиты -->
+            <div class="repertoire-item" id="rock-item">
+                <div class="instrument-animation-container">
+                    <div class="guitar-svg-container" id="guitarSvgContainer">
+                        <svg class="guitar-svg" width="684" height="771" viewBox="0 0 684 771" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Основные линии гитары -->
+                            <path class="guitar-line animated-long delay-0" d="M555.474 233.494C570.343 225.442 584.917 230.501 591.828 234.894C592.834 235.534 594.172 235.411 594.967 234.523L633.794 191.158C633.885 191.056 633.968 190.945 634.04 190.829C641.156 179.471 654.807 179.369 660.772 180.748C678.244 184.097 678.064 165.621 675.643 155.115C675.504 154.512 675.111 154.002 674.573 153.695L651.702 140.665C651.052 140.295 650.261 140.267 649.586 140.591L637.811 146.252M555.474 233.494L534.238 212.904M555.474 233.494L537.251 249.09M534.238 212.904C536.765 208.78 540.906 200.659 540.82 195.848C540.794 194.416 541.286 192.657 542.576 192.036L553.668 186.704M534.238 212.904L518.176 225.582M546.667 173.777L553.668 186.704M553.668 186.704L570.642 178.544M563.209 164.819L570.642 178.544M570.642 178.544L588.101 170.15M580.736 156.55L588.101 170.15M588.101 170.15L604.59 162.223M597.317 148.792L604.59 162.223M604.59 162.223L622.05 153.829M614.588 140.051L622.05 153.829M622.05 153.829L637.811 146.252M630.332 132.441L637.811 146.252M518.176 225.582L537.251 249.09M518.176 225.582L499.21 240.553M537.251 249.09L519.838 263.994M519.838 263.994L499.21 240.553M519.838 263.994L503.901 277.634M499.21 240.553L483.283 253.123M503.901 277.634L483.283 253.123M503.901 277.634L485.334 293.524M483.283 253.123L464.181 268.201M485.334 293.524L464.181 268.201M485.334 293.524L468.777 307.695M464.181 268.201L447.71 281.201M447.71 281.201L468.777 307.695M447.71 281.201L429.882 295.273M468.777 307.695L451.639 322.362M451.639 322.362L429.882 295.273M451.639 322.362L435.479 336.192M429.882 295.273L411.959 309.419M411.959 309.419L435.479 336.192M411.959 309.419L396.313 321.769M435.479 336.192L418.632 350.611M396.313 321.769L418.632 350.611M396.313 321.769L379.528 335.017M418.632 350.611L402.816 364.147M379.528 335.017L402.816 364.147M379.528 335.017L363.109 347.977M402.816 364.147L387 377.683M363.109 347.977L387 377.683M363.109 347.977L347.054 360.649M387 377.683L371.184 391.219M347.054 360.649L371.184 391.219M347.054 360.649L332.167 372.399M371.184 391.219L357.08 403.29M332.167 372.399L357.08 403.29M332.167 372.399L316.769 384.553M357.08 403.29L341.615 416.526M316.769 384.553L341.615 416.526M316.769 384.553L302.538 395.785M316.769 384.553C294.68 378.907 263.194 355.922 313.442 309.095C313.687 308.866 313.894 308.577 314.011 308.263C317.691 298.425 313.565 284.833 268.58 305.484C268.16 305.677 267.764 305.976 267.405 306.267C263.336 309.561 236.465 328.019 209.751 381.636C209.629 381.881 209.464 382.107 209.261 382.29C205.262 385.89 192.872 394.911 172.507 404.54C172.373 404.603 172.239 404.653 172.095 404.689C131.684 414.896 49.5589 444.71 41.9301 482.944C41.8939 483.126 41.8391 483.298 41.7626 483.467C26.5984 516.891 39.4115 577.76 118.136 646.656C146.315 669.311 211.729 699.629 247.96 639.666C259.229 620.615 282.364 579.712 288.415 562.459C288.831 561.27 290.189 560.379 291.22 559.655C295.832 556.412 305.421 542.786 335.146 533.159C356.646 525.918 405.62 492.787 385.563 467.48C384.925 466.675 383.795 466.448 382.871 466.896C359.706 478.119 317.53 489.034 309.64 443.892M341.615 416.526L328.55 427.707M302.538 395.785L328.55 427.707M302.538 395.785L293.493 403.889M328.55 427.707L314.625 439.625M288.583 408.288L277.148 416.045C276.072 416.775 275.823 418.255 276.601 419.297L299.242 449.591C300.031 450.648 301.549 450.816 302.551 449.959L309.64 443.892M288.583 408.288L314.625 439.625M288.583 408.288L293.493 403.889M314.625 439.625L309.64 443.892M293.493 403.889L278.008 384.498C276.761 382.936 273.986 383.56 273.185 385.391C266.589 400.463 238.645 429.213 163.613 454.971C163.396 455.045 163.192 455.149 163.008 455.285C149.476 465.289 126.827 490.519 142.451 513.125M142.451 513.125L134.582 520.577C133.725 521.388 133.629 522.72 134.36 523.646L170.052 568.815C170.8 569.762 172.156 569.962 173.145 569.272L183.14 562.3M142.451 513.125L152.715 505.997C153.692 505.319 155.025 505.505 155.779 506.424L193.333 552.193C194.176 553.221 193.965 554.749 192.875 555.51L183.14 562.3M183.14 562.3C193.918 573.05 213.798 604.316 207.736 643.853C207.652 644.403 207.758 644.981 208.091 645.428C215.369 655.207 237.447 650.879 271.993 558.766C272.074 558.548 272.185 558.343 272.329 558.16C282.252 545.588 308.264 520.599 335.091 518.625C335.369 518.605 335.632 518.541 335.885 518.424C344.11 514.585 359.832 505.038 369.031 492.595C370.457 490.667 367.671 487.916 365.408 488.711C347.627 494.952 312.51 495.854 303.789 463.564"/>
+                            
+                            <!-- Дополнительные элементы с меньшей толщиной -->
+                            <path class="guitar-line animated delay-5" d="M261.068 427.462L290.768 464.324C290.854 464.432 290.934 464.551 290.998 464.674C295.322 473.083 282.988 478.912 277.597 473.219L248.169 437.504C242.767 431.782 256.893 423.051 261.068 427.462Z"/>
+                            
+                            <path class="guitar-line animated delay-6" d="M225.49 453.46L255.19 490.322C255.276 490.43 255.356 490.549 255.42 490.673C259.744 499.081 247.41 504.91 242.019 499.217L212.591 463.502C207.188 457.78 221.315 449.049 225.49 453.46Z"/>
+                            
+                            <path class="guitar-line animated delay-7" d="M188.491 484.49L218.191 521.352C218.278 521.46 218.357 521.576 218.418 521.7C222.671 530.245 204.983 545.329 199.591 539.635L168.814 503.122C163.412 497.401 184.316 480.079 188.491 484.49Z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="repertoire-label label-rock">Рок-хиты</div>
+            </div>
+        </div>
+    </div>
+        <!-- ========== БЛОК "НАША КОМАНДА" ========== -->
+    <div class="team-section">
+        <div class="team-title">Наша команда — профессионалы, <br> выпускники ведущих музыкальных вузов</div>
+        <div class="team-image-container">
+            <img src="Наша-команда.png" alt="Наша команда" class="team-image">
+        </div>
+    </div>
+     <!-- ========== БЛОК "СОЦСЕТИ" ========== -->
+    <div class="social-section">
+        <div class="social-text">В наших соцсетях много полезного</div>
+    </div>
+    <!-- ========== ПОДВАЛ ========== -->
+    <!-- ========== ПОДВАЛ ========== -->
+    <footer class="footer">
+        <div class="footer-social-text">Соцсети</div>
+        <img src="Logo_black" alt="MoonEclipse Logo" class="footer-logo">
+    </footer>
+
+    <script>
+        // ========== КЛАСС ДЛЯ ЗВЕЗДНОГО ПОЛЯ ==========
+        class Star {
+            constructor() {
+                this.reset();
+                this.z = Math.random() * 0.5;
+            }
+            
+            reset() {
+                this.x = Math.random() * 2 - 1;
+                this.y = Math.random() * 2 - 1;
+                this.z = Math.random() * 0.2 + 0.8;
+                this.speed = 0;
+                this.size = Math.random() * 0.9 + 0.3;
+                
+                const colorTypes = [
+                    {h: 200, s: 20, l: 100},
+                    {h: 200, s: 15, l: 95},
+                    {h: 200, s: 10, l: 90},
+                    {h: 190, s: 100, l: 50},
+                    {h: 195, s: 90, l: 60},
+                    {h: 185, s: 90, l: 45},
+                    {h: 200, s: 80, l: 55},
+                    {h: 180, s: 95, l: 65}
+                ];
+                
+                const colorType = colorTypes[Math.floor(Math.random() * colorTypes.length)];
+                this.color = `hsl(${colorType.h}, ${colorType.s}%, ${colorType.l}%)`;
+                this.originalColor = this.color;
+            }
+            
+            update(totalSpeed, direction) {
+                // Усиливаем эффект ускорения при скролле
+                const acceleration = 1.2; // Коэффициент ускорения
+                const adjustedSpeed = totalSpeed * acceleration;
+                
+                if (direction > 0) {
+                    // Скролл вниз - звезды движутся на нас
+                    this.z -= adjustedSpeed * 0.8;
+                } else {
+                    // Скролл вверх - звезды движутся от нас
+                    this.z += adjustedSpeed * 0.8;
+                }
+                
+                if (this.z <= 0.05) {
+                    this.reset();
+                    this.z = 1;
+                } else if (this.z > 2) {
+                    this.reset();
+                    this.z = 0.05;
+                }
+            }
+            
+            show(ctx, width, height) {
+                const sx = (this.x / this.z) * width / 2 + width / 2;
+                const sy = (this.y / this.z) * height / 2 + height / 2;
+                
+                if (sx < -100 || sx > width + 100 || sy < -100 || sy > height + 100) {
+                    return;
+                }
+                
+                const r = (1 / this.z) * this.size * 0.7;
+                
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - sx, 2) + Math.pow(mouseY - sy, 2)
+                );
+                
+                if (distance <= 25) {
+                    const intensity = 1 - (distance / 25);
+                    ctx.fillStyle = `rgba(255, 58, 0, ${intensity})`;
+                    ctx.shadowBlur = r * 2;
+                    ctx.shadowColor = `rgba(255, 58, 0, ${intensity})`;
+                } else {
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 0;
+                    
+                    if (this.z < 0.4) {
+                        ctx.shadowBlur = r * 1.5;
+                        ctx.shadowColor = this.color;
+                    }
+                }
+                
+                ctx.beginPath();
+                ctx.arc(sx, sy, Math.max(0.5, r), 0, Math.PI * 2);
+                ctx.fill();
+                
+                if (this.z < 0.3) {
+                    const glowRadius = r * 1.5;
+                    const gradient = ctx.createRadialGradient(
+                        sx, sy, 0,
+                        sx, sy, glowRadius
+                    );
+                    gradient.addColorStop(0, this.color);
+                    gradient.addColorStop(1, 'rgba(0, 208, 255, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, glowRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // ========== ИНИЦИАЛИЗАЦИЯ ЗВЕЗДНОГО ПОЛЯ ==========
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const stars = [];
+        const numStars = 400;
+        
+        for (let i = 0; i < numStars; i++) {
+            stars.push(new Star());
+        }
+        
+        // ========== УПРАВЛЕНИЕ СКРОЛЛОМ ДЛЯ УСКОРЕНИЯ ЗВЕЗД ==========
+        let lastScrollY = window.scrollY;
+        let lastScrollTime = Date.now();
+        let scrollSpeed = 0;
+        let scrollTimeout = null;
+        let isScrolling = false;
+        let scrollDirection = 1;
+        
+        const BASE_SPEEDS = {
+            MINIMAL: 0.0005,
+            NEAR_MINIMAL: 0.0015,
+            MAX: 0.025
+        };
+        
+        function calculateTotalSpeed() {
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollProgress = maxScroll > 0 ? scrollY / maxScroll : 0;
+            
+            if (!isScrolling) {
+                if (scrollY < 50 || scrollY > maxScroll - 50) {
+                    return BASE_SPEEDS.NEAR_MINIMAL;
+                }
+                return BASE_SPEEDS.MINIMAL;
+            }
+            
+            let speedMultiplier = 1;
+            
+            if (scrollProgress < 0.1) {
+                speedMultiplier = 0.1 + (scrollProgress / 0.1) * 0.9;
+            } else if (scrollProgress > 0.9) {
+                speedMultiplier = 0.1 + ((1 - scrollProgress) / 0.1) * 0.9;
+            }
+            
+            const maxScrollSpeed = 25; // Увеличена максимальная скорость скролла
+            const currentScrollSpeed = Math.min(scrollSpeed, maxScrollSpeed);
+            
+            // Усиливаем влияние скорости скролла
+            const scrollContribution = (currentScrollSpeed / maxScrollSpeed) * BASE_SPEEDS.MAX * speedMultiplier * 1.5;
+            
+            const baseSpeed = (scrollProgress < 0.1 || scrollProgress > 0.9) ? 
+                BASE_SPEEDS.NEAR_MINIMAL : BASE_SPEEDS.MINIMAL;
+            
+            return baseSpeed + scrollContribution;
+        }
+        
+        function updateScroll() {
+            const currentScrollY = window.scrollY;
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastScrollTime;
+            
+            // Определяем направление скролла
+            if (currentScrollY > lastScrollY) {
+                scrollDirection = 1; // Вниз
+            } else if (currentScrollY < lastScrollY) {
+                scrollDirection = -1; // Вверх
+            }
+            
+            if (timeDiff > 0) {
+                const delta = Math.abs(currentScrollY - lastScrollY);
+                scrollSpeed = delta / timeDiff * 10; // Увеличена чувствительность
+                isScrolling = true;
+            }
+            
+            lastScrollY = currentScrollY;
+            lastScrollTime = currentTime;
+            
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isScrolling = false;
+                scrollSpeed = 0;
+            }, 150); // Уменьшено время "инерции"
+        }
+        
+        function animateStars() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+            
+            const totalSpeed = calculateTotalSpeed();
+            
+            for (let star of stars) {
+                star.update(totalSpeed, scrollDirection);
+                star.show(ctx, width, height);
+            }
+            
+            requestAnimationFrame(animateStars);
+        }
+        
+        // ========== СКРИПТ ДЛЯ ШАПКИ ==========
+        function animateHeaderOnScroll() {
+            const header = document.getElementById('header');
+            const logoContainer = document.getElementById('logoContainer');
+            const mainLogo = document.getElementById('mainLogo');
+            const headerLogo = document.querySelector('.header-logo');
+            
+            const scrollThreshold = 100;
+            const logoHideThreshold = 150;
+            
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollPosition > scrollThreshold) {
+                    header.classList.add('scrolled');
+                    
+                    if (scrollPosition <= logoHideThreshold) {
+                        const progress = (scrollPosition - scrollThreshold) / (logoHideThreshold - scrollThreshold);
+                        logoContainer.style.opacity = 1 - progress;
+                        logoContainer.style.transform = `translateY(${-50 * progress - 130}px) scale(${1 - 0.7 * progress})`;
+                        
+                        if (progress > 0.7) {
+                            const logoProgress = (progress - 0.7) / 0.3;
+                            headerLogo.style.opacity = logoProgress;
+                        } else {
+                            headerLogo.style.opacity = 0;
+                        }
+                    } else {
+                        logoContainer.style.opacity = 0;
+                        logoContainer.style.transform = `translateY(-180px) scale(0.3)`;
+                        headerLogo.style.opacity = 1;
+                    }
+                } else {
+                    header.classList.remove('scrolled');
+                    logoContainer.style.opacity = 1;
+                    logoContainer.style.transform = 'translateY(-130px) scale(1)';
+                    headerLogo.style.opacity = 0;
+                }
+            });
+        }
+        
+        // ========== СКРИПТ ДЛЯ АНИМАЦИИ ТЕКСТА ==========
+        function animateTextOnScroll() {
+            const mainHeading = document.getElementById('mainHeading');
+            const elements = [mainHeading];
+            
+            const windowHeight = window.innerHeight;
+            
+            function updateElementAnimation(element) {
+                if (!element) return;
+                
+                const rect = element.getBoundingClientRect();
+                const elementTop = rect.top;
+                const elementBottom = rect.bottom;
+                const elementHeight = rect.height;
+                
+                const isElementVisible = elementBottom > 0 && elementTop < windowHeight;
+                
+                if (isElementVisible) {
+                    const distanceFromTop = Math.max(0, elementTop);
+                    const fadeThreshold = windowHeight * 0.10;
+                    
+                    if (distanceFromTop < fadeThreshold) {
+                        const darkness = 1 - (distanceFromTop / fadeThreshold);
+                        
+                        const colorValue = Math.floor(255 * (1 - darkness));
+                        element.style.color = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
+                        
+                        const moveDistance = -50 * darkness;
+                        const scaleAmount = 1 - (0.15 * darkness);
+                        if (element === mainHeading) {
+                            element.style.transform = `translateY(${moveDistance - 50}px) scale(${scaleAmount})`;
+                        } else {
+                            element.style.transform = `translateY(${moveDistance - 100}px) scale(${scaleAmount})`;
+                        }
+                        
+                        element.classList.remove('animate-in');
+                        element.classList.add('animate-out');
+                    } else {
+                        element.style.color = '#ffffff';
+                        if (element === mainHeading) {
+                            element.style.transform = 'translateY(-50px) scale(1)';
+                        } else {
+                            element.style.transform = 'translateY(0) scale(1)';
+                        }
+                        element.classList.add('animate-in');
+                        element.classList.remove('animate-out');
+                    }
+                } else {
+                    element.style.color = '#ffffff';
+                    if (element === mainHeading) {
+                        element.style.transform = 'translateY(-20px) scale(0.95)';
+                    } else {
+                        element.style.transform = 'translateY(30px) scale(0.95)';
+                    }
+                    element.classList.remove('animate-in');
+                    element.classList.remove('animate-out');
+                }
+            }
+            
+            function updateAllElements() {
+                elements.forEach(element => {
+                    updateElementAnimation(element);
+                });
+            }
+            
+            updateAllElements();
+            
+            let isScrolling = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    isScrolling = true;
+                    requestAnimationFrame(() => {
+                        updateAllElements();
+                        isScrolling = false;
+                    });
+                }
+            });
+        }
+        
+        // ========== СКРИПТ ДЛЯ ВИДЕО-ПЛЕЕРА ==========
+        function setupVideoControls() {
+            const video = document.getElementById('background-video');
+            const playButton = document.getElementById('playButton');
+            const playIcon = document.getElementById('playIcon');
+            const muteButton = document.getElementById('muteButton');
+            const muteIcon = document.getElementById('muteIcon');
+            const fullscreenButton = document.getElementById('fullscreenButton');
+            const fullscreenIcon = document.getElementById('fullscreenIcon');
+            
+            video.play();
+            video.muted = true;
+            
+            function togglePlayPause() {
+                if (video.paused) {
+                    video.play();
+                    playIcon.src = 'play1.svg';
+                } else {
+                    video.pause();
+                    playIcon.src = 'play2.svg';
+                }
+            }
+            
+            playButton.addEventListener('click', togglePlayPause);
+            video.addEventListener('click', togglePlayPause);
+            
+            muteButton.addEventListener('click', function() {
+                video.muted = !video.muted;
+                if (video.muted) {
+                    muteIcon.src = 'mute2.svg';
+                } else {
+                    muteIcon.src = 'mute.svg';
+                }
+            });
+            
+            fullscreenButton.addEventListener('click', function() {
+                const videoWrapper = document.querySelector('.video-wrapper');
+                
+                if (!document.fullscreenElement) {
+                    if (videoWrapper.requestFullscreen) {
+                        videoWrapper.requestFullscreen();
+                    } else if (videoWrapper.mozRequestFullScreen) {
+                        videoWrapper.mozRequestFullScreen();
+                    } else if (videoWrapper.webkitRequestFullscreen) {
+                        videoWrapper.webkitRequestFullscreen();
+                    } else if (videoWrapper.msRequestFullscreen) {
+                        videoWrapper.msRequestFullscreen();
+                    }
+                    fullscreenIcon.src = 'scale2.svg';
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    fullscreenIcon.src = 'scale.svg';
+                }
+            });
+            
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+            
+            function handleFullscreenChange() {
+                if (!document.fullscreenElement && 
+                    !document.webkitFullscreenElement && 
+                    !document.mozFullScreenElement && 
+                    !document.msFullscreenElement) {
+                    fullscreenIcon.src = 'scale.svg';
+                }
+            }
+        }
+        
+        // ========== СКРИПТ ДЛЯ СЕТКИ АФИШ ==========
+        function adjustPosterCards() {
+            const posterCards = document.querySelectorAll('.poster-card');
+            
+            posterCards.forEach(card => {
+                const image = card.querySelector('.poster-card-image');
+                const imageContainer = card.querySelector('.poster-card-image-container');
+                
+                if (image && imageContainer) {
+                    if (image.complete) {
+                        updateImageRatio(image, imageContainer);
+                    } else {
+                        image.addEventListener('load', () => {
+                            updateImageRatio(image, imageContainer);
+                        });
+                    }
+                    
+                    image.addEventListener('error', () => {
+                        imageContainer.style.paddingBottom = '66.67%';
+                    });
+                }
+            });
+        }
+        
+        function updateImageRatio(image, container) {
+            const naturalWidth = image.naturalWidth;
+            const naturalHeight = image.naturalHeight;
+            
+            if (naturalWidth > 0 && naturalHeight > 0) {
+                const ratio = (naturalHeight / naturalWidth) * 100;
+                
+                const minRatio = 50;
+                const maxRatio = 150;
+                
+                const clampedRatio = Math.max(minRatio, Math.min(maxRatio, ratio));
+                
+                container.style.paddingBottom = `${clampedRatio}%`;
+            }
+        }
+        
+        // ========== СКРИПТ ДЛЯ КАРТОЧЕК-ЗАГЛУШЕК ==========
+        function addPlaceholderCardsIfNeeded() {
+            const postersGrid = document.querySelector('.posters-grid');
+            if (!postersGrid) return;
+            
+            const realCards = postersGrid.querySelectorAll('.poster-card:not(.placeholder-card)');
+            const placeholderCards = postersGrid.querySelectorAll('.poster-card.placeholder-card');
+            
+            placeholderCards.forEach(card => card.remove());
+            
+            const realCount = realCards.length;
+            
+            if (realCount === 1 || realCount === 2) {
+                const placeholderCount = realCount === 1 ? 1 : 1;
+                
+                for (let i = 0; i < placeholderCount; i++) {
+                    const placeholderCard = document.createElement('div');
+                    placeholderCard.className = 'poster-card placeholder-card';
+                    placeholderCard.innerHTML = `
+                        <div class="placeholder-top-area">
+                            <img src="Скрипка.svg" alt="Инструмент" class="instrument-icon" id="instrument-icon">
+                            <div class="placeholder-divider"></div>
+                        </div>
+                        <div class="placeholder-bottom-area">
+                            <div class="placeholder-title">Готовимся<br>к новому концерту</div>
+                            <div class="placeholder-subtitle">Сообщим, когда все будет готово</div>
+                        </div>
+                    `;
+                    postersGrid.appendChild(placeholderCard);
+                }
+                
+                const totalCount = realCount + placeholderCount;
+                postersGrid.setAttribute('data-count', totalCount);
+            } else if (realCount >= 3) {
+                postersGrid.setAttribute('data-count', realCount);
+            }
+            
+            setTimeout(() => {
+                adjustPosterCards();
+                setupInstrumentIcons();
+            }, 100);
+        }
+        
+        function setupInstrumentIcons() {
+            const placeholderCards = document.querySelectorAll('.poster-card.placeholder-card');
+            const instruments = ['Скрипка.svg', 'Орган.svg', 'Флейта.svg', 'Фортепиано.svg', 'Барабаны.svg'];
+            
+            instruments.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+            
+            placeholderCards.forEach(card => {
+                const icon = card.querySelector('.instrument-icon');
+                if (!icon) return;
+                
+                let currentIndex = 0;
+                let hasLeftCard = false;
+                let isAnimating = false;
+                
+                icon.src = instruments[currentIndex];
+                icon.classList.remove('large-icon', 'extra-large-icon');
+                
+                card.addEventListener('mouseleave', function() {
+                    hasLeftCard = true;
+                });
+                
+                card.addEventListener('mouseenter', function() {
+                    if (hasLeftCard && !isAnimating) {
+                        isAnimating = true;
+                        
+                        currentIndex = (currentIndex + 1) % instruments.length;
+                        
+                        icon.classList.add('fade-out');
+                        
+                        setTimeout(() => {
+                            icon.src = instruments[currentIndex];
+                            icon.classList.remove('large-icon', 'extra-large-icon');
+                            
+                            if (currentIndex === 1 || currentIndex === 4) {
+                                icon.classList.add('extra-large-icon');
+                            } else if (currentIndex === 2 || currentIndex === 3) {
+                                icon.classList.add('large-icon');
+                            }
+                            
+                            icon.classList.remove('fade-out');
+                            icon.classList.add('fade-in');
+                            
+                            setTimeout(() => {
+                                icon.classList.remove('fade-in');
+                                isAnimating = false;
+                            }, 400);
+                        }, 400);
+                        
+                        hasLeftCard = false;
+                    }
+                });
+            });
+        }
+        
+        // ========== СКРИПТ ДЛЯ АНИМАЦИИ АФИШИ ==========
+        function setupAfishaAnimation() {
+            const afishaContainer = document.getElementById('afishaContainer');
+            const animatedRect = document.getElementById('animatedRect');
+            const afishaText = document.getElementById('afishaText');
+            const posterCards = document.querySelectorAll('.poster-card');
+            
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                    rect.bottom >= 0
+                );
+            }
+            
+            function showPosterCards() {
+                posterCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 300);
+                });
+            }
+            
+            function startAfishaAnimation() {
+                if (!afishaContainer.classList.contains('animation-started')) {
+                    afishaContainer.classList.add('animation-started');
+                    
+                    animatedRect.classList.add('outline-animating');
+                    
+                    setTimeout(() => {
+                        animatedRect.classList.remove('outline-animating');
+                        animatedRect.classList.add('fill-animating');
+                        
+                        afishaText.classList.add('text-visible');
+                        
+                        setTimeout(() => {
+                            animatedRect.classList.remove('fill-animating');
+                            animatedRect.classList.add('fade-out');
+                            
+                            setTimeout(() => {
+                                showPosterCards();
+                            }, 300);
+                            
+                            setTimeout(() => {
+                                afishaText.classList.remove('text-visible');
+                                afishaText.classList.add('text-final');
+                            }, 300);
+                            
+                            setTimeout(() => {
+                                animatedRect.style.opacity = '0';
+                            }, 1500);
+                        }, 500);
+                    }, 2000);
+                }
+            }
+            
+            function checkAfishaVisibility() {
+                if (isElementInViewport(afishaContainer)) {
+                    startAfishaAnimation();
+                }
+            }
+            
+            window.addEventListener('scroll', checkAfishaVisibility);
+            setTimeout(checkAfishaVisibility, 500);
+        }
+        
+        // ========== СКРИПТ ДЛЯ АНИМАЦИЙ РЕПЕРТУАРА (ПОСЛЕДОВАТЕЛЬНАЯ АНИМАЦИЯ С ПЛАШКАМИ) ==========
+        function setupRepertoireAnimations() {
+            const repertoireItems = document.querySelectorAll('.repertoire-item');
+            const animationOrder = ['#instrumental-item', '#classic-item', '#pop-item', '#rock-item'];
+            let currentAnimationIndex = 0;
+            let animationStarted = false;
+            
+            // Сначала скрываем все плашки и сбрасываем анимации
+            function resetAllAnimations() {
+                repertoireItems.forEach(item => {
+                    const svgContainer = item.querySelector('.piano-svg-container, .violin-svg-container, .disco-svg-container, .guitar-svg-container');
+                    if (svgContainer) {
+                        svgContainer.style.opacity = '0';
+                    }
+                    
+                    // Скрываем плашку и сбрасываем её анимацию
+                    const label = item.querySelector('.repertoire-label');
+                    if (label) {
+                        label.style.opacity = '0';
+                        label.style.backgroundColor = 'transparent';
+                        label.style.color = 'transparent';
+                        label.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                        label.style.transition = 'none';
+                    }
+                    
+                    // Сбрасываем анимации линий
+                    const animatedElements = item.querySelectorAll('.animated, .animated-long, .piano-line, .violin-path, .disco-path, .guitar-line');
+                    animatedElements.forEach(el => {
+                        el.style.animation = 'none';
+                        el.style.stroke = '#FF3A00'; // Сбрасываем цвет на красный
+                        el.style.transition = 'stroke 0.5s ease';
+                        el.style.strokeDashoffset = '1000';
+                        if (el.classList.contains('animated-long')) {
+                            el.style.strokeDashoffset = '2000';
+                        }
+                    });
+                });
+            }
+            
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                    rect.bottom >= 0
+                );
+            }
+            
+            // Анимация плашки (как у "Афиши", но без контура)
+            function animateLabel(label) {
+                return new Promise(resolve => {
+                    // Прячем плашку в начале
+                    label.style.opacity = '0';
+                    label.style.backgroundColor = 'transparent';
+                    label.style.color = 'transparent';
+                    label.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                    label.style.transition = 'none';
+                    
+                    // Шаг 1: Плавное появление фона
+                    setTimeout(() => {
+                        label.style.transition = 'background-color 0.5s ease, transform 0.5s ease, opacity 0.5s ease';
+                        label.style.opacity = '1';
+                        label.style.backgroundColor = '#FFFFFF';
+                        label.style.transform = 'translate(-50%, -50%) scale(1)';
+                        
+                        // Шаг 2: Появление текста
+                        setTimeout(() => {
+                            label.style.transition = 'color 0.3s ease';
+                            label.style.color = '#000000';
+                            
+                            // Ждем завершения анимации
+                            setTimeout(() => {
+                                resolve();
+                            }, 500);
+                        }, 300);
+                    }, 50);
+                });
+            }
+            
+            // Анимация одного инструмента с плашкой
+            function animateInstrumentWithLabel(itemId) {
+                return new Promise(resolve => {
+                    const item = document.querySelector(itemId);
+                    if (!item) {
+                        resolve();
+                        return;
+                    }
+                    
+                    // Показываем контейнер с SVG
+                    const svgContainer = item.querySelector('.piano-svg-container, .violin-svg-container, .disco-svg-container, .guitar-svg-container');
+                    if (svgContainer) {
+                        svgContainer.style.opacity = '1';
+                    }
+                    
+                    // Сбрасываем цвет линий на красный и сбрасываем анимацию
+                    const animatedElements = item.querySelectorAll('.animated, .animated-long, .piano-line, .violin-path, .disco-path, .guitar-line');
+                    animatedElements.forEach(el => {
+                        el.style.animation = 'none';
+                        el.style.stroke = '#FF3A00';
+                        el.style.transition = 'stroke 0.5s ease';
+                        el.style.strokeDashoffset = '1000';
+                        if (el.classList.contains('animated-long')) {
+                            el.style.strokeDashoffset = '2000';
+                        }
+                    });
+                    
+                    // Запускаем анимацию рисования красным цветом
+                    setTimeout(() => {
+                        animatedElements.forEach(el => {
+                            if (el.classList.contains('animated-long')) {
+                                el.style.animation = 'draw-long 3s ease-in-out forwards';
+                            } else {
+                                el.style.animation = 'draw 1.5s ease-in-out forwards';
+                            }
+                            
+                            // Восстанавливаем задержку
+                            const delayClass = Array.from(el.classList).find(cls => cls.startsWith('delay-'));
+                            if (delayClass) {
+                                const delayNum = parseInt(delayClass.replace('delay-', ''));
+                                el.style.animationDelay = (delayNum * 0.05) + 's';
+                            }
+                        });
+                        
+                        // Ждем завершения анимации рисования (берем максимальное время)
+                        const animationTime = item.querySelector('.animated-long') ? 3000 : 1500;
+                        
+                        setTimeout(() => {
+                            // Меняем цвет на серый
+                            animatedElements.forEach(el => {
+                                el.style.stroke = '#535353';
+                            });
+                            
+                            // Ждем завершения перехода цвета
+                            setTimeout(() => {
+                                // Анимация плашки
+                                const label = item.querySelector('.repertoire-label');
+                                if (label) {
+                                    animateLabel(label).then(() => {
+                                        resolve();
+                                    });
+                                } else {
+                                    resolve();
+                                }
+                            }, 500);
+                            
+                        }, animationTime + 500); // +500мс для задержек
+                        
+                    }, 100);
+                });
+            }
+            
+            // Последовательная анимация всех инструментов
+            async function startSequentialAnimation() {
+                if (animationStarted) return;
+                animationStarted = true;
+                
+                for (let i = 0; i < animationOrder.length; i++) {
+                    await animateInstrumentWithLabel(animationOrder[i]);
+                    
+                    // Пауза между инструментами (кроме последнего)
+                    if (i < animationOrder.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    }
+                }
+            }
+            
+            function checkRepertoireVisibility() {
+                const repertoireSection = document.querySelector('.repertoire-section');
+                if (repertoireSection && isElementInViewport(repertoireSection)) {
+                    startSequentialAnimation();
+                }
+            }
+            
+            // Инициализация
+            resetAllAnimations();
+            
+            window.addEventListener('scroll', checkRepertoireVisibility);
+            setTimeout(checkRepertoireVisibility, 500);
+        }
+        
+        // ========== ОБРАБОТЧИКИ СОБЫТИЙ ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            animateStars();
+            updateScroll();
+            animateHeaderOnScroll();
+            animateTextOnScroll();
+            setupVideoControls();
+            
+            adjustPosterCards();
+            addPlaceholderCardsIfNeeded();
+            setupInstrumentIcons();
+            setupAfishaAnimation();
+            setupRepertoireAnimations();
+            
+            window.addEventListener('resize', adjustPosterCards);
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            window.addEventListener('resize', () => {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            });
+        });
+        
+        // ========== ОБРАБОТЧИК СКРОЛЛА ДЛЯ УСКОРЕНИЯ ЗВЕЗД ==========
+        window.addEventListener('scroll', updateScroll);
+    </script>
+</body>
+</html>
